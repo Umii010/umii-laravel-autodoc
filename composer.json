@@ -1,0 +1,36 @@
+{
+  "name": "umii/umii-autodoc",
+  "description": "Auto documentation generator for Laravel apps (routes, models, configs, ERD, PDF export).",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Umii (umii020)",
+      "email": "umii020@hotmail.com"
+    },
+    {
+      "name": "Umer Shahzad ",
+      "email": "umii020@hotmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Umii\\AutoDoc\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Umii\\AutoDoc\\UmiiAutoDocServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": ">=8.2",
+    "illuminate/support": "^10.0|^11.0|^12.0",
+    "graphp/graphviz": "^0.2",
+    "dompdf/dompdf": "^2.0"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
