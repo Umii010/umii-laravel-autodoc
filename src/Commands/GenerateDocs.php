@@ -446,9 +446,16 @@ protected function generatePlantUml($models)
    /** Generate PNG using PlantUML jar */
 protected function generatePlantUmlPng($out)
 {
-    $plantumlJar = __DIR__ . '/../../resources/bin/plantuml.jar';
-    if (!File::exists($plantumlJar)) {
-        $this->error('❌ PlantUML JAR not found at resources/bin/plantuml.jar');
+    // Package root
+    $packageRoot = realpath(__DIR__ . '/../../resources/bin');
+
+    // Paths inside your package
+    $plantumlJar = $packageRoot . '/plantuml.jar';
+    $jreJava     = $packageRoot . '/jre/bin/java' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
+    $graphvizDot = $packageRoot . '/graphviz/bin/dot' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
+
+    if (!file_exists($plantumlJar)) {
+        $this->error("❌ PlantUML JAR not found at: $plantumlJar");
         return;
     }
 
@@ -456,36 +463,35 @@ protected function generatePlantUmlPng($out)
     $pngFile  = $out . '/erd.png';
     $svgFile  = $out . '/erd.svg';
 
-    // 1. Check for bundled JRE
-    $jreJava = __DIR__ . '/../../resources/bin/jre/bin/java' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
-    $javaCmd = File::exists($jreJava) ? escapeshellarg($jreJava) : 'java';
+    // Use bundled JRE if available
+    $javaCmd = file_exists($jreJava) ? escapeshellarg($jreJava) : 'java';
 
-    // 2. Point PlantUML to bundled Graphviz "dot"
-    $graphvizDot = __DIR__ . '/../../resources/bin/graphviz/bin/dot' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
-    if (File::exists($graphvizDot)) {
+    // Tell PlantUML about bundled Graphviz
+    if (file_exists($graphvizDot)) {
         putenv('GRAPHVIZ_DOT=' . realpath($graphvizDot));
     }
 
-    // 3. Try PNG first
+    // Try PNG first
     $cmd = $javaCmd . ' -Xmx1024M -jar ' . escapeshellarg($plantumlJar) . ' -tpng ' . escapeshellarg($pumlFile);
     exec($cmd, $output, $return);
 
-    if ($return === 0 && File::exists($pngFile)) {
+    if ($return === 0 && file_exists($pngFile)) {
         $this->info('✅ ERD PNG generated: ' . realpath($pngFile));
         return;
     }
 
-    // 4. Fallback: try SVG
+    // If PNG fails → try SVG
     $this->warn('⚠️ PNG generation failed, retrying with SVG...');
     $cmd = $javaCmd . ' -Xmx1024M -jar ' . escapeshellarg($plantumlJar) . ' -tsvg ' . escapeshellarg($pumlFile);
     exec($cmd, $output, $return);
 
-    if ($return === 0 && File::exists($svgFile)) {
+    if ($return === 0 && file_exists($svgFile)) {
         $this->info('✅ ERD SVG generated: ' . realpath($svgFile));
     } else {
         $this->error('❌ Failed to generate ERD diagram. Command used: ' . $cmd);
     }
 }
+
 
 
     /** Take screenshots */
