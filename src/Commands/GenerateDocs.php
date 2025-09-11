@@ -443,11 +443,10 @@ protected function generatePlantUml($models)
 }
 
     /** Generate PNG using PlantUML jar */
-/** Generate PNG (or SVG fallback) using PlantUML jar */
+   /** Generate PNG using PlantUML jar */
 protected function generatePlantUmlPng($out)
 {
-    // PlantUML jar location
-    $plantumlJar = base_path('resources/bin/plantuml.jar');
+    $plantumlJar = __DIR__ . '/../../resources/bin/plantuml.jar';
     if (!File::exists($plantumlJar)) {
         $this->error('❌ PlantUML JAR not found at resources/bin/plantuml.jar');
         return;
@@ -457,12 +456,12 @@ protected function generatePlantUmlPng($out)
     $pngFile  = $out . '/erd.png';
     $svgFile  = $out . '/erd.svg';
 
-    // 1. Use bundled JRE if available
-    $jreJava = base_path('resources/bin/jre/bin/java' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : ''));
+    // 1. Check for bundled JRE
+    $jreJava = __DIR__ . '/../../resources/bin/jre/bin/java' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
     $javaCmd = File::exists($jreJava) ? escapeshellarg($jreJava) : 'java';
 
     // 2. Point PlantUML to bundled Graphviz "dot"
-    $graphvizDot = base_path('resources/bin/graphviz/bin/dot' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : ''));
+    $graphvizDot = __DIR__ . '/../../resources/bin/graphviz/bin/dot' . (strncasecmp(PHP_OS, 'WIN', 3) === 0 ? '.exe' : '');
     if (File::exists($graphvizDot)) {
         putenv('GRAPHVIZ_DOT=' . realpath($graphvizDot));
     }
@@ -487,7 +486,6 @@ protected function generatePlantUmlPng($out)
         $this->error('❌ Failed to generate ERD diagram. Command used: ' . $cmd);
     }
 }
-
 
 
     /** Take screenshots */
