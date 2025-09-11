@@ -14,6 +14,6 @@ source distribution.
   Please email azul_openjdk@azul.com for further information.
 
   Include this version code in your email:
-  Zulu 24.32+13 eeaa906c-cee3-4074-8443-5d8f93f262e9
+  Zulu 17.60+17 889d87b2-ff97-405d-af21-7b3819c01bde
 
 To learn more about Azul products, visit https://www.azul.com/modern-cloud-enterprise/?r=zulu
