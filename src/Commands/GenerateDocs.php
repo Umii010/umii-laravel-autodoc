@@ -462,7 +462,8 @@ protected function generatePlantUml($models)
             $javaCmd = 'java';
         }
 
-        $cmd = $javaCmd . ' -jar ' . escapeshellarg($plantumlJar) . ' -tpng ' . escapeshellarg($pumlFile);
+       $cmd = $javaCmd . ' -Xmx2028M -jar ' . escapeshellarg($plantumlJar) . ' -tpng ' . escapeshellarg($pumlFile);
+
         exec($cmd, $output, $return);
 
         if ($return === 0 && File::exists($out . '/erd.png')) {
